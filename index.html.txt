@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Sally</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background-color: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: Arial, sans-serif;
+    }
+
+    .board {
+      width: 90%;
+      height: 90%;
+      border: 2px solid #000;
+      position: relative;
+    }
+
+    .blinking {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 20px;
+      font-weight: bold;
+      color: black;
+      cursor: pointer;
+      animation: blink 1s infinite;
+      text-decoration: underline;
+    }
+
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="board">
+    <a href="Format original_A5_ordre.pdf" download class="blinking">sally da...</a>
+  </div>
+</body>
+</html>

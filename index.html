@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sally</title>
+  <!-- Import Coral Pixels -->
+  <link href="https://fonts.googleapis.com/css2?family=Coral+Pixels&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      background: #fff;
+      overflow: hidden;
+      position: relative;
+      font-family: 'Coral Pixels', sans-serif;
+    }
+    #movingText {
+      position: absolute;
+      color: #000;
+      text-decoration: none;
+      opacity: 1;
+      transition: opacity 6s ease-in-out;
+      will-change: opacity, font-size, top, left;
+    }
+  </style>
+</head>
+<body>
+  <!-- Lien vers ton PDF -->
+  <a href="sallyda.pdf" download="sallyda.pdf" id="movingText">sallyda...</a>
+
+  <script>
+    function waitTransitionEnd(el, timeoutMs) {
+      return new Promise(resolve => {
+        let done = false;
+        const onEnd = (e) => {
+          if (e.propertyName === 'opacity' && !done) {
+            done = true;
+            el.removeEventListener('transitionend', onEnd);
+            resolve();
+          }
+        };
+        el.addEventListener('transitionend', onEnd);
+        setTimeout(() => {
+          if (!done) {
+            el.removeEventListener('transitionend', onEnd);
+            resolve();
+          }
+        }, timeoutMs);
+      });
+    }
+
+    const text = document.getElementById('movingText');
+    let lastX = null; // mémoriser la position X précédente
+
+    function randomPosition() {
+      const vw = window.innerWidth;
+      const vh = window.innerHeight;
+      let x, y;
+
+      // générer un X différent du précédent (au moins 20% d’écart)
+      do {
+        x = Math.floor(Math.random() * vw);
+      } while (lastX !== null && Math.abs(x - lastX) < vw * 0.2);
+
+      y = Math.floor(Math.random() * vh);
+      lastX = x;
+      return { top: y + "px", left: x + "px" };
+    }
+
+    function applyRandomPosition() {
+      text.style.top = "";
+      text.style.left = "";
+      text.style.right = "";
+      text.style.bottom = "";
+      text.style.transform = "";
+      Object.assign(text.style, randomPosition());
+    }
+
+    function randomFontSize() {
+      const min = 5; // taille minimale
+      const max = 34; // taille maximale
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    async function cycle() {
+      // Disparition lente (6s)
+      text.style.transition = 'opacity 6s ease-in-out';
+      text.style.opacity = '0';
+      await waitTransitionEnd(text, 6500);
+
+      // Nouvelle position + taille
+      applyRandomPosition();
+      text.style.fontSize = randomFontSize() + "px";
+
+      // Réapparition douce (1.8s)
+      text.style.transition = 'opacity 1.8s ease-in-out';
+      void text.offsetWidth; // forcer recalcul
+      text.style.opacity = '1';
+      await waitTransitionEnd(text, 2000);
+
+      // Visible brièvement (0.5s) puis recommence
+      setTimeout(cycle, 500);
+    }
+
+    // Lancer
+    applyRandomPosition();
+    text.style.fontSize = randomFontSize() + "px";
+    setTimeout(cycle, 1000);
+  </script>
+</body>
+</html>
